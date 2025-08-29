@@ -1,4 +1,3 @@
-
 <!doctype html>
 <html lang="es">
 <head>
@@ -6,6 +5,28 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Índice IFCT0109 · Seguridad Informática</title>
   <link href="assets/style.css" rel="stylesheet">
+  <style>
+    /* Estilo para módulos deshabilitados con candado */
+    .card.disabled {
+      opacity: 0.5;
+      filter: grayscale(30%);
+      pointer-events: none; /* evita clics */
+      position: relative;
+    }
+    .card.disabled::after {
+      content: "🔒 Próximamente";
+      position: absolute;
+      top: 10px;
+      right: 14px;
+      background: #444;
+      color: #fff;
+      font-size: 12px;
+      font-weight: 600;
+      padding: 4px 8px;
+      border-radius: 8px;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+    }
+  </style>
 </head>
 <body>
   <div class="container">
@@ -15,6 +36,7 @@
     </div>
 
     <div class="grid">
+      <!-- MF0486_3 ACTIVO -->
       <section class="card">
         <h2>MF0486_3 · Seguridad en equipos informáticos</h2>
         <div class="meta">Hardening de PCs, malware, copias, cifrado.</div>
@@ -26,47 +48,51 @@
         </div>
       </section>
 
-      <section class="card">
+      <!-- MF0487_3 DESHABILITADO -->
+      <section class="card disabled">
         <h2>MF0487_3 · Auditoría de seguridad informática</h2>
-        <div class="meta">Metodologías, evidencia, informes, planes.</div>
+        <div class="meta">Disponible próximamente.</div>
         <div class="actions">
-          <a class="btn juegos" href="mf0487/juegos.html">🎯 Juegos</a>
-          <a class="btn recursos" href="mf0487/recursos.html">🗂️ Recursos</a>
-          <a class="btn ejercicios" href="mf0487/ejercicios.html">🧪 Ejercicios</a>
-          <a class="btn test" href="mf0487/test.html">📊 Test</a>
+          <span class="btn juegos">🎯 Juegos</span>
+          <span class="btn recursos">🗂️ Recursos</span>
+          <span class="btn ejercicios">🧪 Ejercicios</span>
+          <span class="btn test">📊 Test</span>
         </div>
       </section>
 
-      <section class="card">
+      <!-- MF0488_3 DESHABILITADO -->
+      <section class="card disabled">
         <h2>MF0488_3 · Gestión de incidentes</h2>
-        <div class="meta">Detección, respuesta, forense inicial.</div>
+        <div class="meta">Disponible próximamente.</div>
         <div class="actions">
-          <a class="btn juegos" href="mf0488/juegos.html">🕹️ Juegos</a>
-          <a class="btn recursos" href="mf0488/recursos.html">📎 Recursos</a>
-          <a class="btn ejercicios" href="mf0488/ejercicios.html">🧭 Ejercicios</a>
-          <a class="btn test" href="mf0488/test.html">📝 Test</a>
+          <span class="btn juegos">🕹️ Juegos</span>
+          <span class="btn recursos">📎 Recursos</span>
+          <span class="btn ejercicios">🧭 Ejercicios</span>
+          <span class="btn test">📝 Test</span>
         </div>
       </section>
 
-      <section class="card">
+      <!-- MF0489_3 DESHABILITADO -->
+      <section class="card disabled">
         <h2>MF0489_3 · Sistemas seguros de acceso y transmisión</h2>
-        <div class="meta">Criptografía, VPN, PKI, redes seguras.</div>
+        <div class="meta">Disponible próximamente.</div>
         <div class="actions">
-          <a class="btn juegos" href="mf0489/juegos.html">🧠 Juegos</a>
-          <a class="btn recursos" href="mf0489/recursos.html">🔗 Recursos</a>
-          <a class="btn ejercicios" href="mf0489/ejercicios.html">🛠️ Ejercicios</a>
-          <a class="btn test" href="mf0489/test.html">🧪 Test</a>
+          <span class="btn juegos">🧠 Juegos</span>
+          <span class="btn recursos">🔗 Recursos</span>
+          <span class="btn ejercicios">🛠️ Ejercicios</span>
+          <span class="btn test">🧪 Test</span>
         </div>
       </section>
 
-      <section class="card">
+      <!-- MF0490_3 DESHABILITADO -->
+      <section class="card disabled">
         <h2>MF0490_3 · Gestión de servicios</h2>
-        <div class="meta">ITIL/ISO 20000, SLAs, continuidad.</div>
+        <div class="meta">Disponible próximamente.</div>
         <div class="actions">
-          <a class="btn juegos" href="mf0490/juegos.html">🎲 Juegos</a>
-          <a class="btn recursos" href="mf0490/recursos.html">📂 Recursos</a>
-          <a class="btn ejercicios" href="mf0490/ejercicios.html">📐 Ejercicios</a>
-          <a class="btn test" href="mf0490/test.html">✅ Test</a>
+          <span class="btn juegos">🎲 Juegos</span>
+          <span class="btn recursos">📂 Recursos</span>
+          <span class="btn ejercicios">📐 Ejercicios</span>
+          <span class="btn test">✅ Test</span>
         </div>
       </section>
     </div>
