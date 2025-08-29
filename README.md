@@ -21,7 +21,7 @@ Está organizado en 5 módulos, cada uno con **juegos, recursos, ejercicios y te
 
 El sitio está disponible mediante **GitHub Pages** en la siguiente dirección:
 
-👉 [https://TU-USUARIO.github.io/seguridad-informatica](https://TU-USUARIO.github.io/seguridad-informatica)
+👉https://rponte357-pixel.github.io/seguridad-informatica/
 
 ## ✨ Notas
 
