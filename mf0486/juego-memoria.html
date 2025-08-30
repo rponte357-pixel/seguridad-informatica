@@ -6,7 +6,6 @@
     <title>Juego de Memoria de Seguridad</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&display=swap" rel="stylesheet">
     <style>
-        /* Fuentes */
         body {
             font-family: 'Inter', sans-serif;
             margin: 0;
@@ -21,7 +20,6 @@
             box-sizing: border-box;
         }
 
-        /* Contenedor principal del juego */
         .game-container {
             background-color: #ffffff;
             border-radius: 20px;
@@ -29,9 +27,8 @@
             padding: 30px;
             text-align: center;
             max-width: 90%;
-            width: 800px; /* Ancho fijo para desktop */
+            width: 1000px;
             margin-bottom: 20px;
-            box-sizing: border-box;
             display: flex;
             flex-direction: column;
             align-items: center;
@@ -41,31 +38,26 @@
             color: #2c3e50;
             margin-bottom: 20px;
             font-size: 2.5em;
-            text-shadow: 1px 1px 2px rgba(0,0,0,0.1);
         }
 
-        /* Cuadrícula de tarjetas */
         .card-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(120px, 1fr)); /* Adaptable */
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
             gap: 15px;
             width: 100%;
-            max-width: 700px; /* Ancho máximo para el grid */
-            margin: 0 auto; /* Centrar el grid */
+            max-width: 900px;
+            margin: 0 auto;
         }
 
-        /* Estilo base de cada tarjeta */
         .card {
             width: 100%;
-            height: 120px;
-            perspective: 1000px; /* Para el efecto 3D de volteo */
+            height: 180px;
+            perspective: 1000px;
             cursor: pointer;
             border-radius: 15px;
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-            transition: transform 0.3s ease;
         }
 
-        /* Contenido interno de la tarjeta (frente y dorso) */
         .card-inner {
             width: 100%;
             height: 100%;
@@ -76,19 +68,17 @@
             display: flex;
             justify-content: center;
             align-items: center;
+            position: relative;
         }
 
-        /* Voltear la tarjeta */
         .card.flipped .card-inner {
             transform: rotateY(180deg);
         }
 
-        /* Estilo del frente de la tarjeta (dorso visible inicialmente) */
         .card-face, .card-back {
             position: absolute;
             width: 100%;
             height: 100%;
-            -webkit-backface-visibility: hidden; /* Oculta la parte trasera durante el volteo */
             backface-visibility: hidden;
             border-radius: 15px;
             display: flex;
@@ -96,56 +86,53 @@
             align-items: center;
             padding: 10px;
             box-sizing: border-box;
-            font-size: 1.2em;
-            font-weight: bold;
         }
 
-        /* Estilo del dorso de la tarjeta (parte oculta) */
         .card-back {
-            background: linear-gradient(135deg, #4CAF50 0%, #8BC34A 100%); /* Verde */
+            background: linear-gradient(135deg, #4CAF50 0%, #8BC34A 100%);
             color: #fff;
-            font-size: 2.5em;
+            font-size: 3em;
         }
 
-        /* Estilo del frente de la tarjeta (contenido visible al voltear) */
         .card-face {
-            background-color: #ecf0f1; /* Gris claro */
+            background-color: #ecf0f1;
             color: #2c3e50;
-            transform: rotateY(180deg); /* Oculto inicialmente */
+            transform: rotateY(180deg);
             border: 2px solid #bdc3c7;
-            font-size: 0.9em; /* Ajuste para texto largo */
-            word-break: break-word; /* Para manejar texto largo */
-            text-align: center;
+            font-size: 1.2em;
             line-height: 1.3;
+            text-align: center;
         }
 
-        /* Estilo para tarjetas emparejadas */
+        .card-face img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+        }
+
         .card.matched .card-inner {
-            border: 3px solid #f39c12; /* Borde dorado */
-            box-shadow: 0 0 15px rgba(243, 156, 18, 0.8); /* Resplandor dorado */
+            border: 3px solid #f39c12;
+            box-shadow: 0 0 15px rgba(243, 156, 18, 0.8);
             animation: match-animation 0.8s ease-out;
-            pointer-events: none; /* Desactivar clics en tarjetas emparejadas */
+            pointer-events: none;
         }
 
-        /* Animación para tarjetas emparejadas */
         @keyframes match-animation {
-            0% { transform: scale(1) rotateY(180deg); opacity: 1; }
-            50% { transform: scale(1.05) rotateY(180deg); opacity: 1; }
-            100% { transform: scale(1) rotateY(180deg); opacity: 1; }
+            0% { transform: scale(1) rotateY(180deg); }
+            50% { transform: scale(1.05) rotateY(180deg); }
+            100% { transform: scale(1) rotateY(180deg); }
         }
 
-        /* Mensajes de estado del juego */
         #game-messages {
             margin-top: 20px;
             font-size: 1.4em;
             color: #e67e22;
             font-weight: bold;
-            min-height: 30px; /* Para evitar CLS */
+            min-height: 30px;
         }
 
-        /* Botón de reinicio */
         button {
-            background: linear-gradient(135deg, #3498db 0%, #2980b9 100%); /* Azul */
+            background: linear-gradient(135deg, #3498db 0%, #2980b9 100%);
             color: white;
             padding: 12px 25px;
             border: none;
@@ -154,21 +141,8 @@
             font-size: 1.1em;
             font-weight: bold;
             margin-top: 20px;
-            transition: transform 0.2s ease, box-shadow 0.2s ease;
-            box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
         }
 
-        button:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 8px 15px rgba(0, 0, 0, 0.3);
-        }
-
-        button:active {
-            transform: translateY(0);
-            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
-        }
-
-        /* Mensaje de victoria */
         #win-message {
             font-size: 2em;
             color: #27ae60;
@@ -181,50 +155,6 @@
             0% { transform: translateY(0); }
             100% { transform: translateY(-10px); }
         }
-
-        /* Media queries para responsividad */
-        @media (max-width: 768px) {
-            h1 {
-                font-size: 2em;
-            }
-            .card-grid {
-                grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
-                gap: 10px;
-            }
-            .card {
-                height: 100px;
-            }
-            .card-back {
-                font-size: 2em;
-            }
-            .card-face {
-                font-size: 0.8em;
-            }
-            .game-container {
-                padding: 20px;
-                width: 100%;
-                max-width: 100%; /* Permitir que ocupe todo el ancho en móviles */
-            }
-        }
-
-        @media (max-width: 480px) {
-            h1 {
-                font-size: 1.8em;
-            }
-            .card-grid {
-                grid-template-columns: repeat(3, 1fr); /* 3 columnas en pantallas muy pequeñas */
-                gap: 8px;
-            }
-            .card {
-                height: 90px;
-            }
-            .card-back {
-                font-size: 1.8em;
-            }
-            .card-face {
-                font-size: 0.7em;
-            }
-        }
     </style>
 </head>
 <body>
@@ -232,203 +162,150 @@
     <div class="game-container">
         <h1>Juego de Memoria de Seguridad 🛡️</h1>
         <div id="game-messages"></div>
-        <div class="card-grid" id="game-board">
-            <!-- Las tarjetas se insertarán aquí por JavaScript -->
-        </div>
+        <div class="card-grid" id="game-board"></div>
         <button id="reset-button">Reiniciar Juego</button>
     </div>
 
     <script>
-        // Array de conceptos y sus representaciones (texto/definición e icono/emoji)
-        // Cada par tiene un 'id' único para poder emparejarlos.
         const concepts = [
             { id: 'firewall', type: 'text', content: 'Firewall: Guardián de red que controla el tráfico.' },
-            { id: 'firewall', type: 'icon', content: '🧱' }, // Imagen/icono para Firewall
+            { id: 'firewall', type: 'img', content: '<img src="../assets/img/firewall.png" alt="Firewall">' },
 
             { id: 'backup', type: 'text', content: 'Copia de Seguridad: Duplicado de datos para recuperar información.' },
-            { id: 'backup', type: 'icon', content: '💾' }, // Imagen/icono para Copia de Seguridad
+            { id: 'backup', type: 'img', content: '<img src="../assets/img/backup.png" alt="Backup">' },
 
             { id: 'antivirus', type: 'text', content: 'Antivirus: Software que protege contra código malicioso.' },
-            { id: 'antivirus', type: 'icon', content: '🛡️' }, // Imagen/icono para Antivirus
+            { id: 'antivirus', type: 'img', content: '<img src="../assets/img/antivirus.png" alt="Antivirus">' },
 
             { id: 'password', type: 'text', content: 'Contraseña Fuerte: Clave compleja y segura para el acceso.' },
-            { id: 'password', type: 'icon', content: '🔑' }, // Imagen/icono para Contraseña
+            { id: 'password', type: 'img', content: '<img src="../assets/img/password.png" alt="Password">' },
 
             { id: 'incident', type: 'text', content: 'Incidencia: Evento inesperado que compromete la seguridad.' },
-            { id: 'incident', type: 'icon', content: '🚨' }, // Imagen/icono para Incidencia
+            { id: 'incident', type: 'img', content: '<img src="../assets/img/incident.png" alt="Incident">' },
 
             { id: 'physical', type: 'text', content: 'Seguridad Física: Protección de equipos e infraestructura del entorno.' },
-            { id: 'physical', type: 'icon', content: '🎥' } // Imagen/icono para Seguridad Física
+            { id: 'physical', type: 'img', content: '<img src="../assets/img/physical.png" alt="Physical Security">' }
         ];
 
-        // Elementos del DOM
         const gameBoard = document.getElementById('game-board');
         const resetButton = document.getElementById('reset-button');
         const gameMessages = document.getElementById('game-messages');
 
-        // Variables de estado del juego
-        let flippedCards = []; // Almacena las tarjetas volteadas actualmente
-        let matchedPairs = 0; // Contador de pares encontrados
-        let lockBoard = false; // Bloquea el tablero para evitar clics mientras se procesa un par
+        let flippedCards = [];
+        let matchedPairs = 0;
+        let lockBoard = false;
 
-        /**
-         * Baraja un array de elementos utilizando el algoritmo de Fisher-Yates.
-         * @param {Array} array - El array a barajar.
-         * @returns {Array} El array barajado.
-         */
         function shuffle(array) {
             for (let i = array.length - 1; i > 0; i--) {
                 const j = Math.floor(Math.random() * (i + 1));
-                [array[i], array[j]] = [array[j], array[i]]; // Intercambio de elementos
+                [array[i], array[j]] = [array[j], array[i]];
             }
             return array;
         }
 
-        /**
-         * Crea una tarjeta HTML para el juego.
-         * @param {Object} item - El objeto que contiene la información de la tarjeta (id, type, content).
-         * @param {number} index - El índice de la tarjeta en el tablero.
-         * @returns {HTMLElement} El elemento div que representa la tarjeta.
-         */
         function createCard(item, index) {
             const card = document.createElement('div');
             card.classList.add('card');
-            card.dataset.id = item.id; // Asigna el ID para emparejar
-            card.dataset.index = index; // Para identificar la tarjeta única
+            card.dataset.id = item.id;
+            card.dataset.index = index;
 
             const cardInner = document.createElement('div');
             cardInner.classList.add('card-inner');
 
             const cardBack = document.createElement('div');
             cardBack.classList.add('card-back');
-            cardBack.textContent = '?'; // Icono o texto inicial para la parte trasera de la tarjeta
+            cardBack.textContent = '?';
 
             const cardFace = document.createElement('div');
             cardFace.classList.add('card-face');
-            cardFace.textContent = item.content; // Contenido real de la tarjeta
+
+            if (item.type === 'img') {
+                cardFace.innerHTML = item.content;
+            } else {
+                cardFace.textContent = item.content;
+            }
 
             cardInner.appendChild(cardBack);
             cardInner.appendChild(cardFace);
             card.appendChild(cardInner);
 
-            // Asigna el manejador de eventos para el clic
             card.addEventListener('click', flipCard);
             return card;
         }
 
-        /**
-         * Voltea una tarjeta al hacer clic en ella.
-         * Maneja la lógica de selección y emparejamiento.
-         * @param {Event} event - El evento de clic.
-         */
-        function flipCard(event) {
-            // Si el tablero está bloqueado, o la tarjeta ya está volteada/emparejada, ignora el clic
+        function flipCard() {
             if (lockBoard || this.classList.contains('flipped') || this.classList.contains('matched')) {
                 return;
             }
+            this.classList.add('flipped');
+            flippedCards.push(this);
 
-            this.classList.add('flipped'); // Agrega la clase 'flipped' para voltear la tarjeta
-            flippedCards.push(this); // Añade la tarjeta a la lista de tarjetas volteadas
-
-            // Si hay dos tarjetas volteadas, verifica si son un par
             if (flippedCards.length === 2) {
-                lockBoard = true; // Bloquea el tablero para evitar más clics
-                checkForMatch(); // Llama a la función para verificar el emparejamiento
+                lockBoard = true;
+                checkForMatch();
             }
         }
 
-        /**
-         * Comprueba si las dos tarjetas volteadas coinciden.
-         */
         function checkForMatch() {
             const [firstCard, secondCard] = flippedCards;
-            // Compara los IDs de las tarjetas para ver si coinciden
             const isMatch = firstCard.dataset.id === secondCard.dataset.id;
 
             if (isMatch) {
-                disableCards(firstCard, secondCard); // Si coinciden, desactiva las tarjetas
+                disableCards(firstCard, secondCard);
             } else {
-                unflipCards(firstCard, secondCard); // Si no coinciden, voltea las tarjetas de nuevo
+                unflipCards(firstCard, secondCard);
             }
         }
 
-        /**
-         * Desactiva las tarjetas que han sido emparejadas.
-         * @param {HTMLElement} card1 - La primera tarjeta emparejada.
-         * @param {HTMLElement} card2 - La segunda tarjeta emparejada.
-         */
         function disableCards(card1, card2) {
-            card1.removeEventListener('click', flipCard); // Remueve el evento de clic
-            card2.removeEventListener('click', flipCard); // Remueve el evento de clic
-            card1.classList.add('matched'); // Añade la clase 'matched'
-            card2.classList.add('matched'); // Añade la clase 'matched'
-            matchedPairs++; // Incrementa el contador de pares
-            gameMessages.textContent = '¡Emparejado! 🎉'; // Muestra mensaje de éxito
-            setTimeout(() => {
-                gameMessages.textContent = ''; // Limpia el mensaje después de un tiempo
-            }, 1000);
-
-            resetBoard(); // Reinicia el estado de las tarjetas volteadas y desbloquea el tablero
-            checkWin(); // Verifica si el juego ha terminado
+            card1.removeEventListener('click', flipCard);
+            card2.removeEventListener('click', flipCard);
+            card1.classList.add('matched');
+            card2.classList.add('matched');
+            matchedPairs++;
+            gameMessages.textContent = '¡Emparejado! 🎉';
+            setTimeout(() => gameMessages.textContent = '', 1000);
+            resetBoard();
+            checkWin();
         }
 
-        /**
-         * Voltea las tarjetas de nuevo si no coinciden.
-         * @param {HTMLElement} card1 - La primera tarjeta no emparejada.
-         * @param {HTMLElement} card2 - La segunda tarjeta no emparejada.
-         */
         function unflipCards(card1, card2) {
-            gameMessages.textContent = 'Intenta de nuevo... 🤔'; // Muestra mensaje de fallo
+            gameMessages.textContent = 'Intenta de nuevo... 🤔';
             setTimeout(() => {
-                card1.classList.remove('flipped'); // Remueve la clase 'flipped'
-                card2.classList.remove('flipped'); // Remueve la clase 'flipped'
-                gameMessages.textContent = ''; // Limpia el mensaje
-                resetBoard(); // Reinicia el estado de las tarjetas volteadas y desbloquea el tablero
-            }, 1500); // Espera 1.5 segundos antes de voltearlas de nuevo
+                card1.classList.remove('flipped');
+                card2.classList.remove('flipped');
+                gameMessages.textContent = '';
+                resetBoard();
+            }, 1500);
         }
 
-        /**
-         * Reinicia el estado de las variables del tablero después de un intento de emparejamiento.
-         */
         function resetBoard() {
-            flippedCards = []; // Limpia la lista de tarjetas volteadas
-            lockBoard = false; // Desbloquea el tablero
+            flippedCards = [];
+            lockBoard = false;
         }
 
-        /**
-         * Verifica si todos los pares han sido encontrados y el juego ha terminado.
-         */
         function checkWin() {
-            if (matchedPairs === concepts.length / 2) { // Si el número de pares emparejados es igual al total de pares
-                gameMessages.innerHTML = '<span id="win-message">¡Felicidades! ¡Has ganado el juego! 🎉</span>'; // Muestra mensaje de victoria
+            if (matchedPairs === concepts.length / 2) {
+                gameMessages.innerHTML = '<span id="win-message">¡Felicidades! ¡Has ganado el juego! 🎉</span>';
             }
         }
 
-        /**
-         * Inicializa o reinicia el juego.
-         * Genera las tarjetas, las baraja y las muestra en el tablero.
-         */
         function initializeGame() {
-            gameBoard.innerHTML = ''; // Limpia el tablero actual
-            matchedPairs = 0; // Reinicia el contador de pares
-            resetBoard(); // Reinicia las variables de estado
+            gameBoard.innerHTML = '';
+            matchedPairs = 0;
+            resetBoard();
 
-            // Baraja las tarjetas
-            const shuffledConcepts = shuffle([...concepts]); // Crea una copia para barajar
-
-            // Crea y añade las tarjetas al tablero
+            const shuffledConcepts = shuffle([...concepts]);
             shuffledConcepts.forEach((item, index) => {
                 const cardElement = createCard(item, index);
                 gameBoard.appendChild(cardElement);
             });
-            gameMessages.textContent = '¡Encuentra los pares! 😉'; // Mensaje inicial
+            gameMessages.textContent = '¡Encuentra los pares! 😉';
         }
 
-        // Event listener para el botón de reiniciar
         resetButton.addEventListener('click', initializeGame);
-
-        // Inicia el juego cuando la ventana se carga
         window.onload = initializeGame;
     </script>
 </body>
 </html>
+
