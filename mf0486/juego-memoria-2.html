@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Juego de Memoria de Seguridad 2</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&display=swap" rel="stylesheet">
+  <style>
+    :root{
+      --ink:#2c3e50; --muted:#6b7280;
+      --card:#ecf0f1; --accent:#f59e0b;
+    }
+    body{
+      font-family:'Inter',system-ui,Segoe UI,Roboto,Arial;
+      margin:0; min-height:100vh; display:flex; align-items:center; justify-content:center; flex-direction:column;
+      background:linear-gradient(135deg,#f0f2f5 0%, #e0e5ec 100%); color:var(--ink); padding:20px;
+    }
+    .game-container{
+      background:#fff; border-radius:20px; padding:30px; width:min(1000px,90%);
+      box-shadow:0 15px 30px rgba(0,0,0,.1), 0 5px 15px rgba(0,0,0,.05); text-align:center;
+    }
+    h1{margin:0 0 18px; font-size:clamp(24px,4vw,40px)}
+    .card-grid{
+      display:grid; gap:15px;
+      grid-template-columns:repeat(auto-fit,minmax(180px,1fr));
+      max-width:900px; margin:0 auto;
+    }
+    .card{width:100%; height:180px; perspective:1000px; cursor:pointer; border-radius:15px; box-shadow:0 4px 8px rgba(0,0,0,.1)}
+    .card-inner{width:100%; height:100%; border-radius:15px; transform-style:preserve-3d; transition:transform .6s; position:relative; display:flex; align-items:center; justify-content:center}
+    .card.flipped .card-inner{transform:rotateY(180deg)}
+    .card-face,.card-back{
+      position:absolute; inset:0; backface-visibility:hidden; border-radius:15px; display:flex; align-items:center; justify-content:center; padding:10px; box-sizing:border-box;
+    }
+    .card-back{background:linear-gradient(135deg,#4CAF50 0%, #8BC34A 100%); color:#fff; font-size:3em}
+    .card-face{background:var(--card); color:var(--ink); transform:rotateY(180deg); border:2px solid #bdc3c7; font-size:1.05em; line-height:1.3; text-align:center}
+    .card-face img{width:100%; height:100%; object-fit:contain}
+    .card.matched .card-inner{border:3px solid var(--accent); box-shadow:0 0 15px rgba(245,158,11,.75); animation:match .8s ease-out; pointer-events:none}
+    @keyframes match{0%{transform:scale(1) rotateY(180deg)}50%{transform:scale(1.05) rotateY(180deg)}100%{transform:scale(1) rotateY(180deg)}}
+    #game-messages{margin-top:16px; font-size:1.2em; color:#e67e22; font-weight:700; min-height:28px}
+    button{margin-top:18px; background:linear-gradient(135deg,#3498db 0%, #2980b9 100%); color:#fff; border:0; border-radius:10px; padding:12px 22px; font-weight:700; cursor:pointer}
+    .note{margin-top:10px; color:var(--muted); font-size:.9em}
+  </style>
+</head>
+<body>
+  <div class="game-container">
+    <h1>Juego de Memoria de Seguridad 2</h1>
+    <div id="game-messages"></div>
+    <div id="game-board" class="card-grid"></div>
+    <button id="reset-button">Reiniciar Juego</button>
+    <div class="note">Encuentra cada par: <em>icono</em> + <em>definición</em>.</div>
+  </div>
+
+  <script>
+    // Pares: (texto descriptivo) + (icono en assets/img/)
+    const concepts = [
+      // 1) Auditoría completa del sistema
+      { id:'audit', type:'text', content:'Auditoría: Detección de vulnerabilidades en sistemas.' },
+      { id:'audit', type:'img',  content:'<img src="../assets/img/audit.png" alt="Auditoría de seguridad">' },
+
+      // 2) Mejoras en infraestructura
+      { id:'infrastructure', type:'text', content:'Infraestructura: Actualización de servidores y red.' },
+      { id:'infrastructure', type:'img',  content:'<img src="../assets/img/infrastructure.png" alt="Mejoras de infraestructura">' },
+
+      // 3) Políticas de seguridad
+      { id:'policies', type:'text', content:'Políticas: Normas de uso y acceso en la organización.' },
+      { id:'policies', type:'img',  content:'<img src="../assets/img/policies.png" alt="Políticas de seguridad">' },
+
+      // 4) Formación del personal
+      { id:'training', type:'text', content:'Formación: Capacitación para reducir errores humanos.' },
+      { id:'training', type:'img',  content:'<img src="../assets/img/training.png" alt="Formación del personal">' },
+
+      // 5) Cumplimiento legal (RGPD)
+      { id:'compliance', type:'text', content:'Cumplimiento: Adaptación a leyes y normativa (RGPD).' },
+      { id:'compliance', type:'img',  content:'<img src="../assets/img/compliance.png" alt="Cumplimiento legal RGPD">' },
+
+      // 6) Gestión de incidentes
+      { id:'incident-mgmt', type:'text', content:'Gestión de incidentes: Registro y análisis de problemas.' },
+      { id:'incident-mgmt', type:'img',  content:'<img src="../assets/img/incident-mgmt.png" alt="Gestión de incidentes">' },
+    ];
+
+    const board = document.getElementById('game-board');
+    const msg = document.getElementById('game-messages');
+    const resetBtn = document.getElementById('reset-button');
+
+    let flipped = [];
+    let matchedPairs = 0;
+    let lock = false;
+
+    function shuffle(a){
+      for(let i=a.length-1;i>0;i--){
+        const j = Math.floor(Math.random()*(i+1));
+        [a[i],a[j]] = [a[j],a[i]];
+      }
+      return a;
+    }
+
+    function createCard(item, idx){
+      const card = document.createElement('div');
+      card.className = 'card';
+      card.dataset.id = item.id;
+      card.dataset.index = idx;
+
+      const inner = document.createElement('div');
+      inner.className = 'card-inner';
+
+      const back = document.createElement('div');
+      back.className = 'card-back';
+      back.textContent = '?';
+
+      const face = document.createElement('div');
+      face.className = 'card-face';
+      if(item.type === 'img'){ face.innerHTML = item.content; }
+      else { face.textContent = item.content; }
+
+      inner.append(back, face);
+      card.appendChild(inner);
+      card.addEventListener('click', onFlip);
+      return card;
+    }
+
+    function onFlip(){
+      if(lock || this.classList.contains('flipped') || this.classList.contains('matched')) return;
+      this.classList.add('flipped');
+      flipped.push(this);
+      if(flipped.length === 2){
+        lock = true;
+        checkMatch();
+      }
+    }
+
+    function checkMatch(){
+      const [c1, c2] = flipped;
+      const ok = c1.dataset.id === c2.dataset.id;
+      if(ok){
+        c1.classList.add('matched');
+        c2.classList.add('matched');
+        c1.removeEventListener('click', onFlip);
+        c2.removeEventListener('click', onFlip);
+        matchedPairs++;
+        msg.textContent = '¡Emparejado! 🎉';
+        setTimeout(()=>msg.textContent='', 900);
+        resetTurn();
+        if(matchedPairs === concepts.length/2){
+          msg.textContent = '¡Enhorabuena! Has completado el juego 🏆';
+        }
+      }else{
+        msg.textContent = 'Sigue intentando… 😉';
+        setTimeout(()=>{
+          c1.classList.remove('flipped');
+          c2.classList.remove('flipped');
+          msg.textContent = '';
+          resetTurn();
+        }, 1100);
+      }
+    }
+
+    function resetTurn(){ flipped = []; lock = false; }
+
+    function init(){
+      board.innerHTML = '';
+      matchedPairs = 0;
+      resetTurn();
+      shuffle([...concepts]).forEach((item,i)=> board.appendChild(createCard(item,i)));
+      msg.textContent = '¡Encuentra los pares!';
+    }
+
+    resetBtn.addEventListener('click', init);
+    window.addEventListener('load', init);
+  </script>
+</body>
+</html>
