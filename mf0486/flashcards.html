@@ -1,25 +1,275 @@
-
-<!doctype html>
+<!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width,initial-scale=1">
-  <title>Flashcards</title>
-  <link href="../assets/style.css" rel="stylesheet">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Flashcards de Ciberseguridad</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f4f7f6;
+            color: #333;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            min-height: 100vh;
+            margin: 0;
+            padding: 20px;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .header h1 {
+            color: #2c3e50;
+            font-size: 2.5em;
+            border-bottom: 3px solid #3498db;
+            padding-bottom: 10px;
+            display: inline-block;
+        }
+
+        .flashcard-container {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 20px;
+            max-width: 1200px;
+        }
+
+        .flashcard {
+            width: 300px;
+            height: 400px;
+            perspective: 1000px;
+            cursor: pointer;
+        }
+
+        .flashcard-inner {
+            width: 100%;
+            height: 100%;
+            text-align: center;
+            transition: transform 0.6s;
+            transform-style: preserve-3d;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            border-radius: 12px;
+        }
+
+        .flashcard.flipped .flashcard-inner {
+            transform: rotateY(180deg);
+        }
+
+        .flashcard-front, .flashcard-back {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            backface-visibility: hidden;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+            border-radius: 12px;
+            box-sizing: border-box;
+        }
+
+        .flashcard-front {
+            background-color: #3498db;
+            color: #fff;
+            font-size: 1.5em;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.2);
+        }
+
+        .flashcard-back {
+            background-color: #ecf0f1;
+            color: #2c3e50;
+            transform: rotateY(180deg);
+            text-align: left;
+            padding: 20px;
+            overflow-y: auto;
+        }
+
+        .flashcard-back h3 {
+            margin-top: 0;
+            color: #3498db;
+            border-bottom: 2px solid #3498db;
+            padding-bottom: 5px;
+            font-size: 1.2em;
+        }
+
+        .flashcard-back p {
+            margin: 10px 0;
+            font-size: 0.9em;
+            line-height: 1.5;
+        }
+
+        .category {
+            font-size: 0.8em;
+            color: rgba(255, 255, 255, 0.8);
+            margin-bottom: 10px;
+        }
+
+        /* Colores por categoría para un toque visual */
+        .category-infeccion-directa .flashcard-front { background-color: #e74c3c; }
+        .category-espionaje .flashcard-front { background-color: #f1c40f; }
+        .category-secuestro .flashcard-front { background-color: #9b59b6; }
+        .category-engano .flashcard-front { background-color: #34495e; }
+        .category-acceso .flashcard-front { background-color: #27ae60; }
+        .category-fraude .flashcard-front { background-color: #e67e22; }
+
+    </style>
 </head>
 <body>
-  <div class="container">
+
     <div class="header">
-      <h1 class="title">Flashcards (demo)</h1>
-      <nav class="breadcrumb"><a href="./recursos.html">Volver a Recursos</a></nav>
+        <h1>Malware Flashcards 💻</h1>
+        <p>Haz clic en cada tarjeta para ver la información detallada.</p>
     </div>
-    <div class="card">
-      <p class="meta">Sustituye este contenido por tus flashcards reales.</p>
-      <ul class="list">
-        <li class="item">🔐 Contraseña segura — combinación de letras, números y símbolos.</li>
-        <li class="item">🛡️ Antivirus — software que detecta y elimina malware.</li>
-      </ul>
-    </div>
-  </div>
+
+    <div class="flashcard-container">
+        </div>
+
+    <script>
+        const flashcardData = [
+            {
+                category: '🦠 Infección directa',
+                title: 'Virus',
+                description: 'Infecta archivos y se activa al ejecutar un programa.',
+                example: 'CIH (Chernobyl) que sobrescribía el BIOS.',
+                prevention: 'No abrir archivos desconocidos. Usar antivirus.'
+            },
+            {
+                category: '🦠 Infección directa',
+                title: 'Gusano',
+                description: 'Se replica por sí solo y se propaga por la red.',
+                example: 'WannaCry que usó la vulnerabilidad EternalBlue.',
+                prevention: 'Actualizar el sistema. Usar firewall.'
+            },
+            {
+                category: '🦠 Infección directa',
+                title: 'Troyano',
+                description: 'Se oculta como software legítimo.',
+                example: 'Zeus, que robaba datos bancarios.',
+                prevention: 'Descargar software solo de sitios oficiales.'
+            },
+            {
+                category: '🕵️‍♂️ Espionaje',
+                title: 'Spyware',
+                description: 'Monitorea la actividad del usuario en secreto.',
+                example: 'CoolWebSearch que rastreaba hábitos de navegación.',
+                prevention: 'Usar antispyware. Evitar software pirata.'
+            },
+            {
+                category: '🕵️‍♂️ Espionaje',
+                title: 'Keylogger',
+                description: 'Registra lo que escribes en el teclado.',
+                example: 'Ardamax Keylogger usado en ataques dirigidos.',
+                prevention: 'Usar antivirus. Revisar procesos en segundo plano.'
+            },
+            {
+                category: '🔒 Secuestro',
+                title: 'Ransomware',
+                description: 'Bloquea el equipo o cifra archivos pidiendo rescate.',
+                example: 'Petya y NotPetya.',
+                prevention: 'Copia de seguridad. No hacer clic en enlaces sospechosos.'
+            },
+            {
+                category: '🔒 Secuestro',
+                title: 'Scareware',
+                description: 'Te asusta con mensajes falsos para que pagues.',
+                example: 'Falsos antivirus como “WinFixer”.',
+                prevention: 'Cerrar ventanas sospechosas. No descargar software no verificado.'
+            },
+            {
+                category: '⚠️ Engaño',
+                title: 'Phishing',
+                description: 'Engaña con correos falsos para robar datos.',
+                example: 'Correos falsos de bancos.',
+                prevention: 'Verificar la dirección del remitente. No compartir datos personales.'
+            },
+            {
+                category: '⚠️ Engaño',
+                title: 'Spoofing',
+                description: 'Falsifica identidad, como direcciones IP o correos.',
+                example: 'Suplantación de sitios como PayPal o bancos.',
+                prevention: 'Verifica las URLs. Usa autenticación en dos pasos.'
+            },
+            {
+                category: '🚪 Acceso no autorizado',
+                title: 'Backdoor',
+                description: 'Crea accesos secretos al sistema.',
+                example: 'Sub7 para control remoto.',
+                prevention: 'Analizar tráfico de red. Escaneo con antivirus.'
+            },
+            {
+                category: '🚪 Acceso no autorizado',
+                title: 'Rootkit',
+                description: 'Oculta actividades maliciosas.',
+                example: 'Sony BMG ocultó rootkits en CDs de música.',
+                prevention: 'Escaneos especializados. Reinstalación si es grave.'
+            },
+            {
+                category: '🚪 Acceso no autorizado',
+                title: 'Exploit',
+                description: 'Aprovecha fallos del sistema.',
+                example: 'EternalBlue (usado por WannaCry).',
+                prevention: 'Mantener el sistema actualizado.'
+            },
+            {
+                category: '💰 Fraude económico',
+                title: 'Criptojacking',
+                description: 'Usa tu PC para minar criptomonedas sin permiso.',
+                example: 'Coinhive incrustado en sitios web.',
+                prevention: 'Extensiones anti-minería. Bloquear scripts.'
+            },
+            {
+                category: '💰 Fraude económico',
+                title: 'Adware',
+                description: 'Muestra publicidad no deseada.',
+                example: 'Fireball que redirigía búsquedas.',
+                prevention: 'Evitar instalaciones rápidas. Revisar permisos.'
+            }
+        ];
+
+        document.addEventListener('DOMContentLoaded', () => {
+            const container = document.querySelector('.flashcard-container');
+            
+            flashcardData.forEach(data => {
+                const flashcard = document.createElement('div');
+                
+                let categoryClass = 'category-default';
+                if (data.category.includes('Infección directa')) { categoryClass = 'category-infeccion-directa'; }
+                else if (data.category.includes('Espionaje')) { categoryClass = 'category-espionaje'; }
+                else if (data.category.includes('Secuestro')) { categoryClass = 'category-secuestro'; }
+                else if (data.category.includes('Engaño')) { categoryClass = 'category-engano'; }
+                else if (data.category.includes('Acceso no autorizado')) { categoryClass = 'category-acceso'; }
+                else if (data.category.includes('Fraude económico')) { categoryClass = 'category-fraude'; }
+
+                flashcard.className = `flashcard ${categoryClass}`;
+
+                flashcard.innerHTML = `
+                    <div class="flashcard-inner">
+                        <div class="flashcard-front">
+                            <span class="category">${data.category}</span>
+                            <h2>${data.title}</h2>
+                        </div>
+                        <div class="flashcard-back">
+                            <h3>${data.title}</h3>
+                            <p><strong>¿Qué hace?:</strong> ${data.description}</p>
+                            <p><strong>Ejemplo real:</strong> ${data.example}</p>
+                            <p><strong>Prevención:</strong> ${data.prevention}</p>
+                        </div>
+                    </div>
+                `;
+
+                flashcard.addEventListener('click', () => {
+                    flashcard.classList.toggle('flipped');
+                });
+
+                container.appendChild(flashcard);
+            });
+        });
+    </script>
 </body>
 </html>
